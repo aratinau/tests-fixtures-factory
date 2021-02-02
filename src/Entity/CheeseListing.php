@@ -8,33 +8,26 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
-use App\Validator\IsValidOwner;
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\IsValidOwner;
 
 /**
  * @ApiResource(
- *     normalizationContext={"groups"={"cheese:read"}},
- *     denormalizationContext={"groups"={"cheese:write"}},
  *     itemOperations={
- *          "get"={
- *              "normalization_context"={"groups"={"cheese:read", "cheese:item:get"}},
- *          },
+ *          "get",
  *          "put"={
- *              "security"="is_granted('EDIT', object)",
- *              "security_message"="Only the creator can edit a cheese listing"
+ *              "access_control"="is_granted('EDIT', previous_object)",
+ *              "access_control_message"="Only the creator can edit a cheese listing"
  *          },
- *          "delete"={"security"="is_granted('ROLE_ADMIN')"}
+ *          "delete"={"access_control"="is_granted('ROLE_ADMIN')"}
  *     },
  *     collectionOperations={
  *          "get",
- *          "post"={
- *              "security"="is_granted('ROLE_USER')",
- *              "denormalization_context"={"groups"={"cheese:write", "cheese:collection:post"}},
- *          }
+ *          "post"={"access_control"="is_granted('ROLE_USER')"}
  *     },
  *     shortName="cheese",
  *     attributes={
